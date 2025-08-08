@@ -13,7 +13,7 @@ function jump() {
   setTimeout(() => {
     player.classList.remove("jump");
     isJumping = false;
-  }, 500);
+  }, 800);
 }
 
 function checkCollision() {
