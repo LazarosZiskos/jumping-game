@@ -5,6 +5,7 @@ const scoreDisplay = document.getElementById("score");
 let isJumping = false;
 let score = 0;
 let gameOver = false;
+let obstaclePassed = false;
 
 function jump() {
   if (isJumping || gameOver) return;
@@ -16,22 +17,31 @@ function jump() {
   }, 800);
 }
 
-function checkCollision() {
+function checkCollisionAndScore() {
   if (gameOver) return;
 
   const playerRect = player.getBoundingClientRect();
   const obstacleRect = obstacle.getBoundingClientRect();
 
-  if (
+  const horizontalOverlap =
     playerRect.right > obstacleRect.left &&
-    playerRect.left < obstacleRect.right &&
-    playerRect.bottom > obstacleRect.top
-  ) {
+    playerRect.left < obstacleRect.right;
+  const verticalOverlap = playerRect.bottom > obstacleRect.top;
+
+  if (horizontalOverlap && verticalOverlap) {
     endGame();
+    return;
+  }
+
+  if (!obstaclePassed && obstacleRect.right < playerRect.left) {
+    score++;
+    scoreDisplay.textContent = "Score: " + score;
+    obstaclePassed = true;
   }
 }
 
 function endGame() {
+  if (gameOver) return;
   gameOver = true;
   obstacle.style.animationPlayState = "paused";
   setTimeout(() => {
@@ -44,16 +54,11 @@ function endGame() {
   }, 100);
 }
 
-function updateScore() {
-  if (!gameOver) {
-    score++;
-    scoreDisplay.textContent = "Score: " + score;
-  }
-}
+obstacle.addEventListener("animationiteration", () => {
+  obstaclePassed = false;
+});
 
-setInterval(updateScore, 1000);
-
-setInterval(checkCollision, 10);
+setInterval(checkCollisionAndScore, 10);
 
 window.addEventListener("keydown", (e) => {
   if (e.code === "Space") {
