@@ -1,1 +1,1 @@
-# Live preview : https://lazarosziskos.github.io/jumping-game/
+Live preview : https://lazarosziskos.github.io/jumping-game/
